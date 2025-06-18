@@ -29,7 +29,8 @@ class PatentRetriever:
     def _load_faiss_index(self, dir_path: str, prefix: str) -> faiss.Index:
         parts = sorted([f for f in os.listdir(dir_path) if f.startswith(prefix)])
         full_bytes = b''.join(open(os.path.join(dir_path, p), 'rb').read() for p in parts)
-        return faiss.read_index_from_buffer(full_bytes)
+        return faiss.deserialize_index(full_bytes)
+
 
     def _load_pickle(self, dir_path: str, prefix: str) -> dict:
         parts = sorted([f for f in os.listdir(dir_path) if f.startswith(prefix)])
