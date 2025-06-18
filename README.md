@@ -1,4 +1,4 @@
-# Weighted AI Index (wAII): Automated Measurement of AI Exposure
+# Weighted AI Index (_w_AII): Automated Measurement of AI Exposure
 
 This Python package provides tools to automatically assess the **AI exposure**, or the extent to which a job or occupation is likely to be impacted by artificial intelligence, either through automation of tasks or by requiring workers to adapt to new technologies. The package uses task extraction and patent similarity retrieval pipelines. It implements the measurement framework described in our [ICWSM 2025 paper](https://workshop-proceedings.icwsm.org/abstract.php?id=2025_05).
 
@@ -33,7 +33,7 @@ description = """Your Job Description Text"""
 task_list = extractor.extract(description)
 print(task_list)
 ```
-**Returned List include:**
+**Returned _List_ include:**
 - (task: str, weight: float) tuples
 - This List can be directly put into PatentRetriever Example 3
 
@@ -73,7 +73,7 @@ retrieved_dict = retriever.ai_exposure([
 ])
 ```
 
-**Returned Dict include:**
+**Returned _Dict_ include:**
 - `past_ai_exposure` and `current_ai_exposure`: wAII scores
 - `past_patent_abstracts` and `current_patent_abstracts`: Closest matched patents
 
