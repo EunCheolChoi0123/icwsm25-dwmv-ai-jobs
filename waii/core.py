@@ -7,6 +7,7 @@ import pickle
 from sklearn.metrics.pairwise import cosine_similarity
 from scipy.special import softmax
 import os
+from huggingface_hub import hf_hub_download
 
 class PatentRetriever:
     def __init__(self,
@@ -14,20 +15,23 @@ class PatentRetriever:
                  base_path=None,
                  device=None,
                  nprobe=10):
-        base_dir = base_path or os.path.join(os.path.dirname(__file__), 'patent_embeddings')
         self.device = device or ('cuda' if torch.cuda.is_available() else 'cpu')
         self.model = SentenceTransformer(model_name, trust_remote_code=True)
 
-        # Load full (unsplit) files directly
-        self.past_index = faiss.read_index(os.path.join(base_dir, 'faiss_nomic_patent_past_index.ivf'))
-        self.current_index = faiss.read_index(os.path.join(base_dir, 'faiss_nomic_patent_current_index.ivf'))
-
+        # Download or load files from HuggingFace hub
+        repo_id = "neochoi95/waii_retrieve"
+        self.past_index = faiss.read_index(
+            hf_hub_download(repo_id=repo_id, filename="patent_embeddings/faiss_nomic_patent_past_index.ivf")
+        )
+        self.current_index = faiss.read_index(
+            hf_hub_download(repo_id=repo_id, filename="patent_embeddings/faiss_nomic_patent_current_index.ivf")
+        )
         self.past_index.nprobe = nprobe
         self.current_index.nprobe = nprobe
 
-        with open(os.path.join(base_dir, 'patent_past_nomic_embed_dict.pkl'), 'rb') as f:
+        with open(hf_hub_download(repo_id=repo_id, filename="patent_embeddings/patent_past_nomic_embed_dict.pkl"), 'rb') as f:
             self.past_dict = pickle.load(f)
-        with open(os.path.join(base_dir, 'patent_current_nomic_embed_dict.pkl'), 'rb') as f:
+        with open(hf_hub_download(repo_id=repo_id, filename="patent_embeddings/patent_current_nomic_embed_dict.pkl"), 'rb') as f:
             self.current_dict = pickle.load(f)
 
     def _get_embedding(self, text: str) -> np.ndarray:
