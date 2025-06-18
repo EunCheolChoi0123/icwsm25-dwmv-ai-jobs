@@ -18,13 +18,14 @@ class PatentRetriever:
         self.device = device or ('cuda' if torch.cuda.is_available() else 'cpu')
         self.model = SentenceTransformer(model_name, trust_remote_code=True)
 
-        self.past_index = self._load_faiss_index(base_dir, prefix='faiss_index_past_')
-        self.current_index = self._load_faiss_index(base_dir, prefix='faiss_index_current_')
+        self.past_index = self._load_faiss_index(base_dir, 'faiss_index_past_', 'faiss_nomic_patent_past_index.ivf')
+        self.current_index = self._load_faiss_index(base_dir, 'faiss_index_current_', 'faiss_nomic_patent_current_index.ivf')
+
         self.past_index.nprobe = nprobe
         self.current_index.nprobe = nprobe
 
-        self.past_dict = self._load_pickle(base_dir, 'past_dict_')
-        self.current_dict = self._load_pickle(base_dir, 'current_dict_')
+        self.past_dict = self._load_pickle(base_dir, 'past_dict_', 'patent_past_nomic_embed_dict.pkl')
+        self.current_dict = self._load_pickle(base_dir, 'current_dict_', 'patent_current_nomic_embed_dict.pkl')
 
     def _combine_if_needed(self, dir_path: str, prefix: str, output_filename: str) -> str:
         """Combine split files if needed and return full path."""
