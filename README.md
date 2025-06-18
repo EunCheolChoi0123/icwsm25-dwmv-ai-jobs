@@ -6,11 +6,12 @@ This Python package provides tools to automatically assess the **AI exposure**, 
 
 You can install the package using either of the following:
 
+**Install directly from GitHub**
 ```bash
-# Install directly from GitHub
 pip install git+https://github.com/EunCheolChoi0123/icwsm25-dwmv-ai-jobs.git
-
-# Or install locally (if you've cloned the repo)
+```
+**Or install locally (if you've cloned the repo)**
+```
 pip install .
 ```
 
