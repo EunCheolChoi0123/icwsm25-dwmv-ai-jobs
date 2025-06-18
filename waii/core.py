@@ -8,6 +8,60 @@ from sklearn.metrics.pairwise import cosine_similarity
 from scipy.special import softmax
 import os
 from huggingface_hub import hf_hub_download
+import json
+from openai import OpenAI
+
+class TaskExtractor:
+    def __init__(
+        self,
+        api_key: str,
+        model: str = "gpt-4o-mini",
+        temperature: float = 0.1,
+        num_tasks: int = 5,
+    ):
+        self.client = OpenAI(api_key=api_key)
+        self.model = model
+        self.temperature = temperature
+        self.num_tasks = num_tasks
+
+    def extract(self, description: str) -> List[Tuple[str, float]]:
+        system_prompt = (
+            "You are an assistant specialized in analyzing job descriptions. "
+            f"Your task is to extract up to {self.num_tasks} key tasks, responsibilities, or requirements essential for the role from the provided job description. "
+            "Focus only on actionable tasks and skills that are critical to the candidate's performance. Combine similar tasks or requirements into a single task to avoid redundancy.\n"
+            "For each task:\n"
+            "1. Assign a 'task_num' starting from 1. This number should reflect the order of the task based on its first appearance in the job description.\n"
+            "2. Provide a 'task' summary focusing on technical or hard skills.\n"
+            "3. Assign a 'weight' (a float up to two decimal places) reflecting the task's importance and relevance within the job description, considering factors such as role focus and key responsibilities. The total should sum to 1.\n"
+            "Output the result as a **JSON array** of dictionaries. Each dictionary should contain:\n"
+            "- 'task_num': Integer.\n"
+            "- 'task': String.\n"
+            "- 'weight': Float.\n"
+        )
+
+        user_prompt = (
+            f"Job Description:\n"
+            "\"\"\"\n"
+            f"{description}\n"
+            "\"\"\"\n"
+            "Output:\n"
+        )
+
+        completion = self.client.chat.completions.create(
+            model=self.model,
+            temperature=self.temperature,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ]
+        )
+
+        try:
+            content = completion.choices[0].message.content.strip()
+            parsed = json.loads(content)
+            return [(entry["task"], float(entry["weight"])) for entry in parsed]
+        except Exception as e:
+            raise ValueError(f"Failed to parse model output: {e}\nRaw output:\n{content}")
 
 class PatentRetriever:
     def __init__(self,
