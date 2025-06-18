@@ -58,10 +58,18 @@ class TaskExtractor:
 
         try:
             content = completion.choices[0].message.content.strip()
+
+            # Remove ```json or ``` fencing if present
+            if content.startswith("```"):
+                content = content.split("```")[1].strip()
+                if content.startswith("json"):
+                    content = content[len("json"):].strip()
+
             parsed = json.loads(content)
             return [(entry["task"], float(entry["weight"])) for entry in parsed]
         except Exception as e:
-            raise ValueError(f"Failed to parse model output: {e}\nRaw output:\n{content}")
+            raise ValueError(f"Failed to parse model output: {e}\nRaw output:\n{completion.choices[0].message.content}")
+
 
 class PatentRetriever:
     def __init__(self,
