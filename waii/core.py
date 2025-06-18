@@ -26,15 +26,26 @@ class PatentRetriever:
         self.past_dict = self._load_pickle(base_dir, 'past_dict_')
         self.current_dict = self._load_pickle(base_dir, 'current_dict_')
 
-    def _load_faiss_index(self, dir_path: str, prefix: str) -> faiss.Index:
-        parts = sorted([f for f in os.listdir(dir_path) if f.startswith(prefix)])
-        full_bytes = b''.join(open(os.path.join(dir_path, p), 'rb').read() for p in parts)
-        return faiss.deserialize_index(full_bytes)
+    def _combine_if_needed(self, dir_path: str, prefix: str, output_filename: str) -> str:
+        """Combine split files if needed and return full path."""
+        output_path = os.path.join(dir_path, output_filename)
+        if not os.path.exists(output_path):
+            parts = sorted([f for f in os.listdir(dir_path) if f.startswith(prefix)])
+            if parts:
+                with open(output_path, 'wb') as outfile:
+                    for part in parts:
+                        with open(os.path.join(dir_path, part), 'rb') as infile:
+                            outfile.write(infile.read())
+        return output_path
 
-    def _load_pickle(self, dir_path: str, prefix: str) -> dict:
-        parts = sorted([f for f in os.listdir(dir_path) if f.startswith(prefix)])
-        full_bytes = b''.join(open(os.path.join(dir_path, p), 'rb').read() for p in parts)
-        return pickle.loads(full_bytes)
+    def _load_faiss_index(self, dir_path: str, prefix: str, output_filename: str) -> faiss.Index:
+        index_path = self._combine_if_needed(dir_path, prefix, output_filename)
+        return faiss.read_index(index_path)
+
+    def _load_pickle(self, dir_path: str, prefix: str, output_filename: str) -> dict:
+        pkl_path = self._combine_if_needed(dir_path, prefix, output_filename)
+        with open(pkl_path, 'rb') as f:
+            return pickle.load(f)
 
     def _get_embedding(self, text: str) -> np.ndarray:
         emb = self.model.encode("search_document: " + text)
