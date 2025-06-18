@@ -1,0 +1,3 @@
+
+include waii/patent_embeddings/*
+recursive-exclude replication_code *
