@@ -30,8 +30,8 @@ extractor = TaskExtractor(
 )
 
 description = """Your Job Description Text"""
-tasks = extractor.extract(description)
-print(tasks)  # Output: List of (task: str, weight: float) tuples, which can be directly put into PatentRetriever Example 3.
+task_list = extractor.extract(description)
+print(task_list)
 ```
 **Returned List include:**
 - (task: str, weight: float) tuples
@@ -50,13 +50,13 @@ retriever = PatentRetriever()
 ### Example 1: Single task string
 
 ```python
-retriever.ai_exposure("Build dashboards")
+retrieved_dict = retriever.ai_exposure("Build dashboards")
 ```
 
 ### Example 2: List of task strings (alternative weighting scheme)
 
 ```python
-retriever.ai_exposure([
+retrieved_dict = retriever.ai_exposure([
     "Build dashboards", 
     "Conduct A/B testing", 
     "Present insights to stakeholders"
@@ -66,7 +66,7 @@ retriever.ai_exposure([
 ### Example 3: Custom weighted tasks
 
 ```python
-retriever.ai_exposure([
+retrieved_dict = retriever.ai_exposure([
     ("Build dashboards", 0.3), 
     ("Conduct A/B testing", 0.5), 
     ("Present insights to stakeholders", 0.2)
