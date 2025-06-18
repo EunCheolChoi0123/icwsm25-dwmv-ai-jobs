@@ -18,35 +18,17 @@ class PatentRetriever:
         self.device = device or ('cuda' if torch.cuda.is_available() else 'cpu')
         self.model = SentenceTransformer(model_name, trust_remote_code=True)
 
-        self.past_index = self._load_faiss_index(base_dir, 'faiss_index_past_', 'faiss_nomic_patent_past_index.ivf')
-        self.current_index = self._load_faiss_index(base_dir, 'faiss_index_current_', 'faiss_nomic_patent_current_index.ivf')
+        # Load full (unsplit) files directly
+        self.past_index = faiss.read_index(os.path.join(base_dir, 'faiss_nomic_patent_past_index.ivf'))
+        self.current_index = faiss.read_index(os.path.join(base_dir, 'faiss_nomic_patent_current_index.ivf'))
 
         self.past_index.nprobe = nprobe
         self.current_index.nprobe = nprobe
 
-        self.past_dict = self._load_pickle(base_dir, 'past_dict_', 'patent_past_nomic_embed_dict.pkl')
-        self.current_dict = self._load_pickle(base_dir, 'current_dict_', 'patent_current_nomic_embed_dict.pkl')
-
-    def _combine_if_needed(self, dir_path: str, prefix: str, output_filename: str) -> str:
-        """Combine split files if needed and return full path."""
-        output_path = os.path.join(dir_path, output_filename)
-        if not os.path.exists(output_path):
-            parts = sorted([f for f in os.listdir(dir_path) if f.startswith(prefix)])
-            if parts:
-                with open(output_path, 'wb') as outfile:
-                    for part in parts:
-                        with open(os.path.join(dir_path, part), 'rb') as infile:
-                            outfile.write(infile.read())
-        return output_path
-
-    def _load_faiss_index(self, dir_path: str, prefix: str, output_filename: str) -> faiss.Index:
-        index_path = self._combine_if_needed(dir_path, prefix, output_filename)
-        return faiss.read_index(index_path)
-
-    def _load_pickle(self, dir_path: str, prefix: str, output_filename: str) -> dict:
-        pkl_path = self._combine_if_needed(dir_path, prefix, output_filename)
-        with open(pkl_path, 'rb') as f:
-            return pickle.load(f)
+        with open(os.path.join(base_dir, 'patent_past_nomic_embed_dict.pkl'), 'rb') as f:
+            self.past_dict = pickle.load(f)
+        with open(os.path.join(base_dir, 'patent_current_nomic_embed_dict.pkl'), 'rb') as f:
+            self.current_dict = pickle.load(f)
 
     def _get_embedding(self, text: str) -> np.ndarray:
         emb = self.model.encode("search_document: " + text)
