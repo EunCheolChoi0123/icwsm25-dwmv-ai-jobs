@@ -81,10 +81,17 @@ The `replication_code/` directory contains all scripts and notebooks used in the
 - Calculate wAII for each job posting
 - Run analyses (RQ1-3)
 
-## 📄 Citation
+## Citation
 
 If you use this package, please cite our paper:
 
-> Choi, E. C. (2025). *Weighted AI Index: Measuring Task Exposure to AI via Patent Embeddings and Language Models*. In Proceedings of the 17th International AAAI Conference on Web and Social Media (ICWSM).
+@inproceedings{choi2025weighted,
+  title     = {Mapping Labor Market Vulnerability in the Age of AI: Evidence from Job Postings and Patent Data},
+  author    = {Choi, Eun Cheol and Cao, Qingyu and Guan, Qi and Peng, Shengzhu and Chen, Po‑Yuan and Luceri, Luca},
+  booktitle = {Workshop Proceedings of the 19th International AAAI Conference on Web and Social Media},
+  year      = {2025},
+  doi       = {10.36190/2025.05},
+  url       = {https://workshop-proceedings.icwsm.org/abstract.php?id=2025_05}
+}
 
 [View abstract and proceedings](https://workshop-proceedings.icwsm.org/abstract.php?id=2025_05)
