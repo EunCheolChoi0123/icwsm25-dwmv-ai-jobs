@@ -84,8 +84,8 @@ The `replication_code/` directory contains all scripts and notebooks used in the
 ## Citation
 
 If you use this package, please cite our paper:
-
-@inproceedings{choi2025weighted,
+```bibtex  
+@inproceedings{choi2025labor,
   title     = {Mapping Labor Market Vulnerability in the Age of AI: Evidence from Job Postings and Patent Data},
   author    = {Choi, Eun Cheol and Cao, Qingyu and Guan, Qi and Peng, Shengzhu and Chen, Po‑Yuan and Luceri, Luca},
   booktitle = {Workshop Proceedings of the 19th International AAAI Conference on Web and Social Media},
@@ -93,5 +93,5 @@ If you use this package, please cite our paper:
   doi       = {10.36190/2025.05},
   url       = {https://workshop-proceedings.icwsm.org/abstract.php?id=2025_05}
 }
-
+```
 [View abstract and proceedings](https://workshop-proceedings.icwsm.org/abstract.php?id=2025_05)
