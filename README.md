@@ -49,7 +49,7 @@ retriever = PatentRetriever()
 retriever.ai_exposure("Build dashboards")
 ```
 
-### Example 2: List of task strings (weights via softmax)
+### Example 2: List of task strings (alternative weighting scheme)
 
 ```python
 retriever.ai_exposure([
