@@ -32,6 +32,9 @@ description = """Your Job Description Text"""
 tasks = extractor.extract(description)
 print(tasks)  # Output: List of (task: str, weight: float) tuples, which can be directly put into PatentRetriever Example 3.
 ```
+**Returned List include:**
+- (task: str, weight: float) tuples
+- This List can be directly put into PatentRetriever Example 3
 
 ## AI Exposure Retrieval with `PatentRetriever`
 
@@ -69,7 +72,7 @@ retriever.ai_exposure([
 ])
 ```
 
-**Returned fields (dict) include:**
+**Returned Dict include:**
 - `past_ai_exposure` and `current_ai_exposure`: wAII scores
 - `past_patent_abstracts` and `current_patent_abstracts`: Closest matched patents
 
