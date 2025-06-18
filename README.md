@@ -47,13 +47,13 @@ from waii import PatentRetriever
 retriever = PatentRetriever()
 ```
 
-### Example 1: Single task string
+### Example 1: Single task _string_
 
 ```python
 retrieved_dict = retriever.ai_exposure("Build dashboards")
 ```
 
-### Example 2: List of task strings (alternative weighting scheme)
+### Example 2: _List_ of task strings (alternative weighting scheme)
 
 ```python
 retrieved_dict = retriever.ai_exposure([
@@ -63,7 +63,7 @@ retrieved_dict = retriever.ai_exposure([
 ], weight="softmax")
 ```
 
-### Example 3: Custom weighted tasks
+### Example 3: Custom weighted tasks (_list_ of _tuples_)
 
 ```python
 retrieved_dict = retriever.ai_exposure([
